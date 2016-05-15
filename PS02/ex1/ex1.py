@@ -43,21 +43,34 @@ def countComponents(J, detect):
     for i in range(0, w):
         for j in range(0, h):
             if not visited[i, j] and J[i, j] == detect:
-                print "count = ", count
-                objects[count] = visit(J, (i, j), visited, count, detect, adj8)
+                objects[count] = visit(J, (i, j), visited, count, detect)
                 count += 1
 
-    return objects, visited
+    detected = count
+
+    for i in range(0, w):
+        for j in range(0, h):
+            if not visited[i, j] and J[i, j] == detect:
+                objects[count] = visit(J, (i, j), visited, count, Gmax - detect, adj4)
+                count += 1
+
+    return objects, detected, visited
 
 
-def geometricFeatures(J, componentId):
-    pass
+def mouseHandler(event, x, y, flags, param):
+    (objects, visited) = param
 
+    if event == cv2.EVENT_FLAG_LBUTTON:
+        objId = visited[y, x]
+        if objId == 0:
+            return
 
-def mouseHandler(event, x , y, flags, visited):
-    if event == cv2.EVENT_MOUSEMOVE:
-        print visited[y, x]
+        contour = np.array(objects[objId])
+        convex = cv2.isContourConvex(contour)
 
+        print "Object id: %d" % objId
+        print "Area: %.2f" % cv2.contourArea(contour)
+        print "Perimeter: %2.f" % cv2.arcLength(contour, convex)
 
 if __name__ == '__main__':
 
@@ -65,16 +78,22 @@ if __name__ == '__main__':
         print "Usage: python ex1.py image_name.png"
         exit(1)
 
+    print "black > white (0)"
+    print "white > black (1)"
+
+    objColor = int(raw_input("Choose your option: "))
+    if objColor == 1:
+        objColor = Gmax
+
     fileName = sys.argv[1]
     I = cv2.imread(fileName, cv2.IMREAD_GRAYSCALE)
-
-    print I
     I = cv2.GaussianBlur(I, (5,5), sigmaX=1)
     J = binarization(I)
-    (numComponents, visited) = countComponents(J, 0)
+
+    (objects, detected, visited) = countComponents(J, objColor)
 
     cv2.namedWindow('image', cv2.WINDOW_NORMAL)
-    cv2.setMouseCallback('image', mouseHandler, visited)
+    cv2.setMouseCallback('image', mouseHandler, (objects, visited))
     cv2.imshow('image', J)
 
     cv2.waitKey(0)
