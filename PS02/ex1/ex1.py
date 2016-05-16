@@ -27,7 +27,7 @@ def visit(J, s, visited, color, detect, adjType=adj4):
             if v[0] < 0 or v[1] < 0 or v[0] >= J.shape[0] or v[1] >= J.shape[1]:
                 continue
             if not visited[v] and J[v] == detect:
-                points.append(v)
+                points.append((v[1], v[0]))
                 visited[v] = color
                 Q.put(v)
 
@@ -35,6 +35,11 @@ def visit(J, s, visited, color, detect, adjType=adj4):
 
 
 def countComponents(J, detect):
+    """
+    :param J: binary image
+    :param detect: color you want to detect with 8-adjacency, the opposite color will be detected with 4-adjacency
+    :return: the objects detected with 8-adjacency (contour-vector), the detected objects, and the visitation matrix
+    """
     (w, h) = J.shape
     visited = np.zeros((w, h), dtype=np.int32)
     count = 1

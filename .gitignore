@@ -1,5 +1,15 @@
-**/*.png
-**/*.jpg
-**/*.jpeg
+**/*.pdf
+**/*.bbl
+**/*.aux
+**/*.log
+**/*.brf
+**/*.blg
+**/*.out
+**/*.backup
+
+FinalProject/**/*.png
+FinalProject/**/*.jpg
+FinalProject/**/*.jpeg
+
 .idea
 

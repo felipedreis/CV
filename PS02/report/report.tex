@@ -1,0 +1,178 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{enumerate}
+\usepackage{lipsum}
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}
+\usepackage{float}
+\usepackage{amsmath}
+
+\graphicspath{ {pics/} }
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,	                   % adds a frame around the code
+  keywordstyle=\color{blue},       % keyword style
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+%opening
+\title{Problem Set 01 - Report}
+\author{Felipe Duarte dos Reis}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Report for the problem set 01, assigned in Computer Vision class. All exercises were solved in Python language using the
+version 2.4.
+\end{abstract}
+
+\section{Problem 1}
+Here we discuss the conclusions about exercises involving measures in a window over an image. 
+The solution is shown in \autoref{lst:ex1} in \autoref{sec:listings}. \\
+We could say that an window $W_p$ is over an homogeneous area of images values when the standard deviation of this window is closer to 
+zero. And, in the other hand, an inhomogeneous area under a window $W_p$ have the standard deviation $\sigma$ far from zero.
+We can also look to the standard error, given by \autoref{eq1}.
+
+\begin{equation}
+\label{eq1}
+  \epsilon = \frac{\sigma}{\sqrt{n}}
+\end{equation}
+
+If $\epsilon > 1$ we can see diversity of vlaues $u$ inside $W_p$. 
+When $\epsilon < 1$ the values $u$ inside $W_p$ are similar and the window isover an homogeneous area.
+In the \autoref{fig:img1}, in the left we are seeing the window located under the piano's keyboard, where is shadowed.
+In this window we have just values next to black, and the error of
+this window is small compared to the window located next the piano's foot where we have values next to white, black and golden.
+
+\begin{figure}[H]
+\centering
+\caption{Up: Inhomogeneous area. Down: Homogeneous area}
+\label{fig:img1}
+\includegraphics[width=200px]{img1}
+\end{figure}
+
+
+\section{Problem 2}
+Here we discuss the conclusions about exercises involving data measures in frames sequenced over time. 
+The solution is shown in \autoref{lst:ex2} in \autoref{sec:listings}. \\
+We recorded a little video to problem two, and reduced the resulution and frame rate. 
+After reading 50 frames we compute three data measures: contrast, mean and variance. 
+We have chosen the constrast  to normalize the other data measurments.
+Using the L1-metric (mean of absolute diferences between functions), we have the values described in \autoref{tab1}:
+
+\begin{table}[H]
+  \centering
+  \caption{Distances between data measures}
+  \label{tab1}
+  \begin{tabular}{ll}
+    Measures	&	Distances      \\
+    CONTRAST, MEAN	&	0.712764534377 \\
+    CONTRAST, STD	&	0.586346704051 \\
+    MEAN, STD	&	0.23814664864  
+  \end{tabular}
+\end{table}
+
+\section{Problem 3}
+Here we discuss the conclusions about exercises involving the Fourier Transform and Inverse Fourier Transform. \\
+\subsection{Item a}
+The solution is shown in \autoref{lst:ex3a} in \autoref{sec:listings}. \\
+The predominant component is clear the module as shown in \autoref{fig:img2}. 
+The top pictures are the original photographies used in this item.
+\begin{figure}[H]
+ \centering
+  \includegraphics[width=400px]{img2}
+  \caption{In top of image we see original photos, left-down the combination of mug's magnitude with book's phase. The oposite in right-down.}
+ \label{fig:img2}
+\end{figure}
+
+The left-down picture shows the combination of mug's magnitude component and book's phase component, and right-down picture 
+shows the combination of book's magnitude component and mug's phase component.
+
+\subsection{Item b}
+The solution is shown in \autoref{lst:ex3b} in \autoref{sec:listings}. \\
+When you increase magnitudes you decrease the intensity values in the spatial domain. 
+When you rotate phase angles $\frac{\pi}{4}$ you decrease the magnitude of image to zero. 
+And if you continue rotating the phase you will increase the magnitude until a maxima value in spatial domain, namely 255.
+
+\section{Problem 5}
+Here we discuss the conclusions about exercises involving sigma filter and histogram equalization. 
+The solution is shown in \autoref{lst:ex5} in \autoref{sec:listings}. \\\
+We applied a sigma filter discussed in the \cite[p. 58]{Klette:Concise_Computer_Vision} in the \autoref{fig:img4}, 
+and then we calculate the histogram equalization following the \autoref{eq2} varying $r$ parameter from 0 to 1.9.
+
+\begin{equation}
+ \label{eq2}
+ g^{r}(u) = \frac{G_{max}}{Q}\sum_{w=0}^{u}h_I(w)^r  \text{ with }
+ Q = \sum_{w=0}^{G_{max}} h_I(w)^r
+\end{equation}
+
+\begin{figure}[H]
+ \centering
+ \caption{Noisy picture used in problem 5}
+ \label{fig:img4}
+ \includegraphics{img4}
+\end{figure}
+
+The histogram surface plot is shown in \autoref{fig:img5}. We can visualize, as said in the statement, 
+that over the $r = 1$ there is a quasi-normal curve. 
+For $r > 1$ the histogram values are more homogeneous, and for $r < 1$ there a clear tendency 
+for higher values in grayscale (higher frequencies between 140 and 180).
+
+\begin{figure}[H]
+ \centering
+ \caption{Histogram surface varying $r$ from 0 to 1.9}
+ \label{fig:img5}
+ \includegraphics[width=400px]{img5}
+\end{figure}
+
+\section{Problem 6}
+In this section we discuss the conclusions about exercise involving edge detection using directional derivatives. 
+The solution is shown in \autoref{lst:ex6} in \autoref{sec:listings}. \\\
+We used here the same piano image shown in \autoref{fig:img1}. We developed a filter kernel that takes the derivative
+in xy axis in the original position and rotated $$\frac{\pi}{4}$$ rad. We used to the Sobel and Laplacian operator
+over the same image to compare the results. This images are shown in \autoref{fig:img6}.
+
+\begin{figure}[H]
+ \centering
+ \caption{Left: Results of derivatives in different directions. Middle: Sobel operator. Right: Laplacian operator}
+ \label{fig:img6}
+ \includegraphics[width=400px]{img6}
+\end{figure}
+Our convolution is not the best result, of course. It can detect the most relevant edges, where we se in the original image a gratter
+diference between grayscale values. But it still identfy the intensity variations inside the edges, where the diference is small and
+shouldn't be detected. In Sobel and Laplacian operator the signifcant edges appears clearly. But the Laplacian in this test highlights 
+the outerbrder better than Sobel.
+
+\appendix
+\section{Listings}
+\label{sec:listings}
+\lstinputlisting[language=Python, caption={Solution of problem one}, label={lst:ex1}]{../ex1/ex1.py}
+\lstinputlisting[language=Python, caption={Solution of problem two}, label={lst:ex2}]{../ex2/ex2.py}
+\lstinputlisting[language=Python, caption={Solution of problem three, item a}, label={lst:ex3a}]{../ex3/ex3a.py}
+\lstinputlisting[language=Python, caption={Solution of problem three, item b}, label={lst:ex3b}]{../ex3/ex3b.py}
+\lstinputlisting[language=Python, caption={Solution of problem five}, label={lst:ex5}]{../ex5/ex5.py}
+
+\bibliography{references.bib}
+
+\end{document}
