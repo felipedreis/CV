@@ -15,6 +15,7 @@
 \usepackage[alf]{abntex2cite}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{verbatim}
 
 \graphicspath{ {pics/} }
 \lstset{ %
@@ -35,7 +36,7 @@
 }
 
 %opening
-\title{Problem Set 01 - Report}
+\title{Problem Set 02 - Report}
 \author{Felipe Duarte dos Reis}
 
 \begin{document}
@@ -43,35 +44,83 @@
 \maketitle
 
 \begin{abstract}
-Report for the problem set 01, assigned in Computer Vision class. All exercises were solved in Python language using the
+Report for the problem set 02, assigned in Computer Vision class. All exercises were solved in Python language using the
 version 2.4.
 \end{abstract}
 
 \section{Problem 1}
-Here we discuss the conclusions about exercises involving measures in a window over an image. 
+Here we discuss the conclusions about exercises involving objects detection and calculating some measures like perimeter and area. 
 The solution is shown in \autoref{lst:ex1} in \autoref{sec:listings}. \\
-We could say that an window $W_p$ is over an homogeneous area of images values when the standard deviation of this window is closer to 
-zero. And, in the other hand, an inhomogeneous area under a window $W_p$ have the standard deviation $\sigma$ far from zero.
-We can also look to the standard error, given by \autoref{eq1}.
-
-\begin{equation}
-\label{eq1}
-  \epsilon = \frac{\sigma}{\sqrt{n}}
-\end{equation}
-
-If $\epsilon > 1$ we can see diversity of vlaues $u$ inside $W_p$. 
-When $\epsilon < 1$ the values $u$ inside $W_p$ are similar and the window isover an homogeneous area.
-In the \autoref{fig:img1}, in the left we are seeing the window located under the piano's keyboard, where is shadowed.
-In this window we have just values next to black, and the error of
-this window is small compared to the window located next the piano's foot where we have values next to white, black and golden.
-
+We first transform the given image in a binary image using the Otsu method (built in OpenCV). 
+This method use the gray-value histogram to provide the best threshold minimizing the overlap between diferent objects and background pixels 
+\cite[p. 170]{Klette:Concise_Computer_Vision}.
+We then use a breadth-first search (BFS) to find objects of the given color \textit{D}. This color maybe 0 (black) or 255 (white).
+To find the desired objects colored with \textit{D} we use a 8-adjacency and 4-adjacency to find the oposite color areas (background).
+To test the code we used the \autoref{fig:img1}. The obtained image is shown in \autoref{fig:img2}.
 \begin{figure}[H]
-\centering
-\caption{Up: Inhomogeneous area. Down: Homogeneous area}
-\label{fig:img1}
-\includegraphics[width=200px]{img1}
+  \centering
+  \includegraphics[width=400px]{../images/objects}
+  \caption{Objects photo to test exercise 1}
+  \label{fig:img1}
 \end{figure}
 
+The number of objects found is 27.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=400px]{../results/binary}
+  \caption{Obtained image after Otsu binarization}
+  \label{fig:img2}
+\end{figure}
+
+\section{Problem 2}
+Here we discuss the conclusions about exercises involving  the calculation of homogeneity and uniformity in a sequence of smoothed images. 
+The solution is shown in \autoref{lst:ex2} in \autoref{sec:listings}. \\
+For the given image \textit{I} in grayscale we use the smoothing iterative process shown in \cite[p. 72]{Klette:Concise_Computer_Vision}.
+As the author says, when we use the box filter iteratively \textit{n} times, it approximates to a Gauss filter with radius n + 1. 
+For each iteration we calculate the co-ocurrence matrix of \textit{R} and \textit{S}, and then the homogeneity and uniformity values for
+both of them.
+We used two figures to test the code, as the problem statement demanded. The \autoref{fig:img3} is a homogeneous iluminated photography
+and the \autoref{fig:img4} is an out-door figure with many ilumination sources.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=200px]{../images/dead_nature}
+  \caption{Dead nature photography}
+  \label{fig:img3}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=200px]{../images/transito}
+  \caption{Trafic photography}
+  \label{fig:img4}
+\end{figure}
+
+The obtained graphics of \textit{Homogeneity x n} and \textit{uniformity x n} are shown in \autoref{fig:img5} and \autoref{fig:img6}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=400px]{../results/ex2_dead_nature}
+  \caption{Result for the \autoref{fig:img3} }
+  \label{fig:img5}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=400px]{../results/ex2_transito}
+  \caption{Result for the \autoref{fig:img4} }
+  \label{fig:img6}
+\end{figure}
+
+As you can see in the \autoref{fig:img5} , for a homogeneous iluminated image the homogeneity and uniformity of \textit{R} decreases in a quasi-exponential form. 
+It means that as we approximate to a Gauss filter, the residual image gets less homogeneous and uniform. We also can see that homogeneity 
+decreases fast than uniformity. To the smoothed image \textit{S}, the colors gets more homogeneous and uniform distributed and the 
+curves seems to be assintoticaly limited. \\
+In a non-homogeneous iluminated image (result in \autoref{fig:img6}), while the homogeneity of \textit{S} increases in a quasi-linear form (and also, seems to be non limited),
+the uniformity decreases in a quasi-exponential form. Indeed the residual image \textit{R} gets less homogeneous and uniform increasing n.
+
+\begin{comment}
 
 \section{Problem 2}
 Here we discuss the conclusions about exercises involving data measures in frames sequenced over time. 
@@ -163,15 +212,14 @@ Our convolution is not the best result, of course. It can detect the most releva
 diference between grayscale values. But it still identfy the intensity variations inside the edges, where the diference is small and
 shouldn't be detected. In Sobel and Laplacian operator the signifcant edges appears clearly. But the Laplacian in this test highlights 
 the outerbrder better than Sobel.
-
+\end{comment}
+\newpage
 \appendix
 \section{Listings}
 \label{sec:listings}
 \lstinputlisting[language=Python, caption={Solution of problem one}, label={lst:ex1}]{../ex1/ex1.py}
 \lstinputlisting[language=Python, caption={Solution of problem two}, label={lst:ex2}]{../ex2/ex2.py}
-\lstinputlisting[language=Python, caption={Solution of problem three, item a}, label={lst:ex3a}]{../ex3/ex3a.py}
-\lstinputlisting[language=Python, caption={Solution of problem three, item b}, label={lst:ex3b}]{../ex3/ex3b.py}
-\lstinputlisting[language=Python, caption={Solution of problem five}, label={lst:ex5}]{../ex5/ex5.py}
+\lstinputlisting[language=Python, caption={Solution of problem three}, label={lst:ex3}]{../ex3/ex3.py}
 
 \bibliography{references.bib}
 
